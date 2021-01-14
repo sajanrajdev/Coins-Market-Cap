@@ -16,3 +16,46 @@
 .App-link {
   color: #61dafb;
 }
+
+*,
+body {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 15px;
+  margin-left: 10px;
+}
+
+.app {
+  padding: 1em;
+}
+h1{
+  color: #104372;
+  size: 100em;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 15px;
+  margin-left: 10px;
+}
+
+.header {
+  color: #104372;
+  size: 100em;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 15px;
+  margin-left: 10px;
+}
+
+th{ 
+  color:rgb(255, 255, 255);
+  background-color: #3773ac;
+}
+
+tr{
+  color: rgb(0, 0, 0);
+}
