@@ -79,14 +79,19 @@ function App() {
     console.log(searchval)
  }
 
-
- const InputBar = ({input:keyword, onChange:setKeyword}) => {
-    //console.log(keyword)
-    return(
-      <form>
+  return (
+  <div className="App">
+    <header>
+      <h1>
+        Top 100 Coins by Market Cap
+      </h1>
+    </header>
+    <div className="container">
+    {/* <InputBar input={searchval} onChange={updateData}/> */}
+    <form>
         <div className="form-row">
           <div className="form-group col-md-6">
-            <input id="search-input" className="form-control" type="text" placeholder="Search by name..."  value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+            <input key="random1" id="search-input" className="form-control" type="text" placeholder="Search by name..." value={searchval} onChange={(e) => updateData(e.target.value)}/>
           </div>
           <div className="form-group col-md-4">
             <select id="currency-input" className="form-control">
@@ -98,19 +103,6 @@ function App() {
           </div>    
         </div>
       </form> 
-    )
-  }
-
-
-  return (
-  <div className="App">
-    <header>
-      <h1>
-        Top 100 Coins by Market Cap
-      </h1>
-    </header>
-    <div className="container">
-    <InputBar value={searchval} onChange={updateData}/>
       <table className="table table-hover">
         <thead>
           <tr>

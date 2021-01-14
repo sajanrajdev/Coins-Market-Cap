@@ -29640,40 +29640,30 @@ function App() {
     console.log(searchval);
   };
 
-  const InputBar = ({
-    input: keyword,
-    onChange: setKeyword
-  }) => {
-    //console.log(keyword)
-    return /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
-      className: "form-row"
-    }, /*#__PURE__*/_react.default.createElement("div", {
-      className: "form-group col-md-6"
-    }, /*#__PURE__*/_react.default.createElement("input", {
-      id: "search-input",
-      className: "form-control",
-      type: "text",
-      placeholder: "Search by name...",
-      value: keyword,
-      onChange: e => setKeyword(e.target.value)
-    })), /*#__PURE__*/_react.default.createElement("div", {
-      className: "form-group col-md-4"
-    }, /*#__PURE__*/_react.default.createElement("select", {
-      id: "currency-input",
-      className: "form-control"
-    }, /*#__PURE__*/_react.default.createElement("option", {
-      defaultValue: true
-    }, "USD"), /*#__PURE__*/_react.default.createElement("option", null, "EUR"), /*#__PURE__*/_react.default.createElement("option", null, "YEN"), /*#__PURE__*/_react.default.createElement("option", null, "JPN")))));
-  };
-
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "App"
   }, /*#__PURE__*/_react.default.createElement("header", null, /*#__PURE__*/_react.default.createElement("h1", null, "Top 100 Coins by Market Cap")), /*#__PURE__*/_react.default.createElement("div", {
     className: "container"
-  }, /*#__PURE__*/_react.default.createElement(InputBar, {
+  }, /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-row"
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-group col-md-6"
+  }, /*#__PURE__*/_react.default.createElement("input", {
+    key: "random1",
+    id: "search-input",
+    className: "form-control",
+    type: "text",
+    placeholder: "Search by name...",
     value: searchval,
-    onChange: updateData
-  }), /*#__PURE__*/_react.default.createElement("table", {
+    onChange: e => updateData(e.target.value)
+  })), /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-group col-md-4"
+  }, /*#__PURE__*/_react.default.createElement("select", {
+    id: "currency-input",
+    className: "form-control"
+  }, /*#__PURE__*/_react.default.createElement("option", {
+    defaultValue: true
+  }, "USD"), /*#__PURE__*/_react.default.createElement("option", null, "EUR"), /*#__PURE__*/_react.default.createElement("option", null, "YEN"), /*#__PURE__*/_react.default.createElement("option", null, "JPN"))))), /*#__PURE__*/_react.default.createElement("table", {
     className: "table table-hover"
   }, /*#__PURE__*/_react.default.createElement("thead", null, /*#__PURE__*/_react.default.createElement("tr", null, /*#__PURE__*/_react.default.createElement("th", null), /*#__PURE__*/_react.default.createElement("th", null, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "Price 24h"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
     key: coin.id
