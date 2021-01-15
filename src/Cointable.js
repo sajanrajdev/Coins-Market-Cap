@@ -4,6 +4,7 @@ import {percentageFormatter, currencyFormatter, capitalize} from './utils.js';
 const CoinTable = ({coindata, currency}) => {
   const [filterState, setFiterState] = React.useState();
 
+  console.log(coindata)
     return (
     <table className="table table-hover">
             <thead>
@@ -11,7 +12,9 @@ const CoinTable = ({coindata, currency}) => {
                 <th onClick={(e) => console.log(order)} order='desc'>Coin</th>
                 <th>Symbol</th>
                 <th>Price</th>
-                <th>Price 24h</th>
+                <th>1h</th>
+                <th>24h</th>
+                <th>7d</th>
                 <th>MKT Cap</th>
                 <th>MKT Cap 24h</th>
             </tr>
@@ -32,8 +35,14 @@ const CoinTable = ({coindata, currency}) => {
                 <td>
                     {currencyFormatter(coin.current_price, currency)}
                 </td>
-                <td className={(coin.price_change_percentage_24h != "NULL" && coin.price_change_percentage_24h > 0) ? "text-success" : "text-danger"}> 
-                    {percentageFormatter(coin.price_change_percentage_24h)}
+                <td className={(coin.price_change_percentage_1h_in_currency != "NULL" && coin.price_change_percentage_1h_in_currency > 0) ? "text-success" : "text-danger"}> 
+                    {percentageFormatter(coin.price_change_percentage_1h_in_currency)}
+                </td>
+                <td className={(coin.price_change_percentage_24h_in_currency != "NULL" && coin.price_change_percentage_24h_in_currency > 0) ? "text-success" : "text-danger"}> 
+                    {percentageFormatter(coin.price_change_percentage_24h_in_currency)}
+                </td>
+                <td className={(coin.price_change_percentage_7d_in_currency != "NULL" && coin.price_change_percentage_7d_in_currency > 0) ? "text-success" : "text-danger"}> 
+                    {percentageFormatter(coin.price_change_percentage_7d_in_currency)}
                 </td>
                 <td>
                     {currencyFormatter(coin.market_cap, currency)}

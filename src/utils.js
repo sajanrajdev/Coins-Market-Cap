@@ -23,18 +23,4 @@
    }
   }
 
-  /*   // Returns table with IDs containing searched value
-  const searchTable = (value, array) => {
-    var filteredData = [];
-    for(var i=0; i<array.length; i++){
-      value = value.toLowerCase();
-      var name = array[i].id.toLowerCase();
-
-      if(name.includes(value)){
-        filteredData.push(array[i]);
-      }
-    }
-    return filteredData;
-  } */
-
   export {percentageFormatter, currencyFormatter, capitalize}

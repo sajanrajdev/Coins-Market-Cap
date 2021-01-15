@@ -16,7 +16,7 @@ function App() {
   // Function to fetch coin data based on a currency input
   const fetchData = (currency) => {
     var url = new URL ("https://api.coingecko.com/api/v3/coins/markets"),
-    params = {vs_currency: currency}
+    params = {vs_currency: currency, price_change_percentage: '1h,24h,7d'}
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
       fetch(url)
       .then((response) => response.json())

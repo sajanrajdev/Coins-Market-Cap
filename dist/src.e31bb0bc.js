@@ -29586,19 +29586,6 @@ const percentageFormatter = number => {
     return "N/A";
   }
 };
-/*   // Returns table with IDs containing searched value
-const searchTable = (value, array) => {
-  var filteredData = [];
-  for(var i=0; i<array.length; i++){
-    value = value.toLowerCase();
-    var name = array[i].id.toLowerCase();
-      if(name.includes(value)){
-      filteredData.push(array[i]);
-    }
-  }
-  return filteredData;
-} */
-
 
 exports.percentageFormatter = percentageFormatter;
 },{}],"Cointable.js":[function(require,module,exports) {
@@ -29621,6 +29608,7 @@ const CoinTable = ({
 }) => {
   const [filterState, setFiterState] = _react.default.useState();
 
+  console.log(coindata);
   return /*#__PURE__*/_react.default.createElement("table", {
     className: "table table-hover"
   }, /*#__PURE__*/_react.default.createElement("thead", null, /*#__PURE__*/_react.default.createElement("tr", {
@@ -29628,7 +29616,7 @@ const CoinTable = ({
   }, /*#__PURE__*/_react.default.createElement("th", {
     onClick: e => console.log(order),
     order: "desc"
-  }, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "Price 24h"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
+  }, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "1h"), /*#__PURE__*/_react.default.createElement("th", null, "24h"), /*#__PURE__*/_react.default.createElement("th", null, "7d"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
     key: coin.id
   }, /*#__PURE__*/_react.default.createElement("td", {
     align: "left"
@@ -29640,8 +29628,12 @@ const CoinTable = ({
       marginRight: 20
     }
   }), /*#__PURE__*/_react.default.createElement("b", null, (0, _utils.capitalize)(coin.id))), /*#__PURE__*/_react.default.createElement("td", null, coin.symbol.toUpperCase()), /*#__PURE__*/_react.default.createElement("td", null, (0, _utils.currencyFormatter)(coin.current_price, currency)), /*#__PURE__*/_react.default.createElement("td", {
-    className: coin.price_change_percentage_24h != "NULL" && coin.price_change_percentage_24h > 0 ? "text-success" : "text-danger"
-  }, (0, _utils.percentageFormatter)(coin.price_change_percentage_24h)), /*#__PURE__*/_react.default.createElement("td", null, (0, _utils.currencyFormatter)(coin.market_cap, currency)), /*#__PURE__*/_react.default.createElement("td", {
+    className: coin.price_change_percentage_1h_in_currency != "NULL" && coin.price_change_percentage_1h_in_currency > 0 ? "text-success" : "text-danger"
+  }, (0, _utils.percentageFormatter)(coin.price_change_percentage_1h_in_currency)), /*#__PURE__*/_react.default.createElement("td", {
+    className: coin.price_change_percentage_24h_in_currency != "NULL" && coin.price_change_percentage_24h_in_currency > 0 ? "text-success" : "text-danger"
+  }, (0, _utils.percentageFormatter)(coin.price_change_percentage_24h_in_currency)), /*#__PURE__*/_react.default.createElement("td", {
+    className: coin.price_change_percentage_7d_in_currency != "NULL" && coin.price_change_percentage_7d_in_currency > 0 ? "text-success" : "text-danger"
+  }, (0, _utils.percentageFormatter)(coin.price_change_percentage_7d_in_currency)), /*#__PURE__*/_react.default.createElement("td", null, (0, _utils.currencyFormatter)(coin.market_cap, currency)), /*#__PURE__*/_react.default.createElement("td", {
     className: coin.market_cap_change_percentage_24h != "NULL" && coin.market_cap_change_percentage_24h > 0 ? "text-success" : "text-danger"
   }, (0, _utils.percentageFormatter)(coin.market_cap_change_percentage_24h))))));
 };
@@ -29680,7 +29672,8 @@ function App() {
   const fetchData = currency => {
     var url = new URL("https://api.coingecko.com/api/v3/coins/markets"),
         params = {
-      vs_currency: currency
+      vs_currency: currency,
+      price_change_percentage: '1h,24h,7d'
     };
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     fetch(url).then(response => response.json()).then(data => {
