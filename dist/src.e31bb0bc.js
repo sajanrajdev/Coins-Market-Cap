@@ -29619,11 +29619,16 @@ const CoinTable = ({
   coindata,
   currency
 }) => {
+  const [filterState, setFiterState] = _react.default.useState();
+
   return /*#__PURE__*/_react.default.createElement("table", {
     className: "table table-hover"
   }, /*#__PURE__*/_react.default.createElement("thead", null, /*#__PURE__*/_react.default.createElement("tr", {
     className: "big-info"
-  }, /*#__PURE__*/_react.default.createElement("th", null, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "Price 24h"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
+  }, /*#__PURE__*/_react.default.createElement("th", {
+    onClick: e => console.log(order),
+    order: "desc"
+  }, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "Price 24h"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
     key: coin.id
   }, /*#__PURE__*/_react.default.createElement("td", {
     align: "left"
@@ -29632,7 +29637,7 @@ const CoinTable = ({
     style: {
       width: 18,
       height: 18,
-      marginRight: 10
+      marginRight: 20
     }
   }), /*#__PURE__*/_react.default.createElement("b", null, (0, _utils.capitalize)(coin.id))), /*#__PURE__*/_react.default.createElement("td", null, coin.symbol.toUpperCase()), /*#__PURE__*/_react.default.createElement("td", null, (0, _utils.currencyFormatter)(coin.current_price, currency)), /*#__PURE__*/_react.default.createElement("td", {
     className: coin.price_change_percentage_24h != "NULL" && coin.price_change_percentage_24h > 0 ? "text-success" : "text-danger"
