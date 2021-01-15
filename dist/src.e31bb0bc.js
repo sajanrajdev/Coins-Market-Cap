@@ -29552,7 +29552,98 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"App.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.capitalize = exports.currencyFormatter = exports.percentageFormatter = void 0;
+
+// Function to capitalize a string
+const capitalize = s => {
+  if (typeof s !== 'string') return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}; // Function to format integers into a certain currency
+
+
+exports.capitalize = capitalize;
+
+const currencyFormatter = (number, currency) => new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: currency,
+  minimumFractionDigits: 2
+}).format(number); // Function to format numbers into 2 decimal point fixed percentages
+
+
+exports.currencyFormatter = currencyFormatter;
+
+const percentageFormatter = number => {
+  if (number != null) {
+    var percentage = number.toFixed(2) + "%";
+    return percentage;
+  } else {
+    return "N/A";
+  }
+};
+/*   // Returns table with IDs containing searched value
+const searchTable = (value, array) => {
+  var filteredData = [];
+  for(var i=0; i<array.length; i++){
+    value = value.toLowerCase();
+    var name = array[i].id.toLowerCase();
+      if(name.includes(value)){
+      filteredData.push(array[i]);
+    }
+  }
+  return filteredData;
+} */
+
+
+exports.percentageFormatter = percentageFormatter;
+},{}],"Cointable.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _utils = require("./utils.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const CoinTable = ({
+  coindata,
+  currency
+}) => {
+  return /*#__PURE__*/_react.default.createElement("table", {
+    className: "table table-hover"
+  }, /*#__PURE__*/_react.default.createElement("thead", null, /*#__PURE__*/_react.default.createElement("tr", {
+    className: "big-info"
+  }, /*#__PURE__*/_react.default.createElement("th", null, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "Price 24h"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
+    key: coin.id
+  }, /*#__PURE__*/_react.default.createElement("td", {
+    align: "left"
+  }, /*#__PURE__*/_react.default.createElement("img", {
+    src: coin.image,
+    style: {
+      width: 18,
+      height: 18,
+      marginRight: 10
+    }
+  }), /*#__PURE__*/_react.default.createElement("b", null, (0, _utils.capitalize)(coin.id))), /*#__PURE__*/_react.default.createElement("td", null, coin.symbol.toUpperCase()), /*#__PURE__*/_react.default.createElement("td", null, (0, _utils.currencyFormatter)(coin.current_price, currency)), /*#__PURE__*/_react.default.createElement("td", {
+    className: coin.price_change_percentage_24h != "NULL" && coin.price_change_percentage_24h > 0 ? "text-success" : "text-danger"
+  }, (0, _utils.percentageFormatter)(coin.price_change_percentage_24h)), /*#__PURE__*/_react.default.createElement("td", null, (0, _utils.currencyFormatter)(coin.market_cap, currency)), /*#__PURE__*/_react.default.createElement("td", {
+    className: coin.market_cap_change_percentage_24h != "NULL" && coin.market_cap_change_percentage_24h > 0 ? "text-success" : "text-danger"
+  }, (0, _utils.percentageFormatter)(coin.market_cap_change_percentage_24h))))));
+};
+
+var _default = CoinTable;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","./utils.js":"utils.js"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29564,11 +29655,15 @@ var _react = _interopRequireWildcard(require("react"));
 
 require("./App.css");
 
+var _Cointable = _interopRequireDefault(require("./Cointable.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-var defaultCurrency = 'usd';
+var defaultCurrency = 'USD';
 var renderedData = [];
 
 function App() {
@@ -29593,51 +29688,20 @@ function App() {
 
   (0, _react.useEffect)(() => {
     fetchData(currency);
-  }, []); // Function to capitalize a string
+  }, []); // Updates table tada upon new search value input
 
-  const capitalize = s => {
-    if (typeof s !== 'string') return '';
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }; // Function to format integers into a certain currency
-
-
-  const currencyFormatter = (number, currency) => new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2
-  }).format(number); // Function to format numbers into 2 decimal point fixed percentages
-
-
-  const percentageFormatter = number => {
-    if (number != null) {
-      var percentage = number.toFixed(2) + "%";
-      return percentage;
-    } else {
-      return "N/A";
-    }
-  };
-  /*   // Returns table with IDs containing searched value
-    const searchTable = (value, array) => {
-      var filteredData = [];
-      for(var i=0; i<array.length; i++){
-        value = value.toLowerCase();
-        var name = array[i].id.toLowerCase();
-  
-        if(name.includes(value)){
-          filteredData.push(array[i]);
-        }
-      }
-      return filteredData;
-    } */
-
-
-  const updateData = async searchval => {
+  const searchUpdate = async searchval => {
     const filteredData = coindataDefault.filter(coin => {
       return coin.id.toLowerCase().includes(searchval.toLowerCase());
     });
     setSearchval(searchval);
     setCoindata(filteredData);
     console.log(searchval);
+  };
+
+  const currencyUpdate = async currency => {
+    setCurrency(currency);
+    fetchData(currency);
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -29655,35 +29719,27 @@ function App() {
     type: "text",
     placeholder: "Search by name...",
     value: searchval,
-    onChange: e => updateData(e.target.value)
+    onChange: e => searchUpdate(e.target.value)
   })), /*#__PURE__*/_react.default.createElement("div", {
     className: "form-group col-md-4"
   }, /*#__PURE__*/_react.default.createElement("select", {
     id: "currency-input",
-    className: "form-control"
-  }, /*#__PURE__*/_react.default.createElement("option", {
-    defaultValue: true
-  }, "USD"), /*#__PURE__*/_react.default.createElement("option", null, "EUR"), /*#__PURE__*/_react.default.createElement("option", null, "YEN"), /*#__PURE__*/_react.default.createElement("option", null, "JPN"))))), /*#__PURE__*/_react.default.createElement("table", {
-    className: "table table-hover"
-  }, /*#__PURE__*/_react.default.createElement("thead", null, /*#__PURE__*/_react.default.createElement("tr", null, /*#__PURE__*/_react.default.createElement("th", null), /*#__PURE__*/_react.default.createElement("th", null, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "Price 24h"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
-    key: coin.id
-  }, /*#__PURE__*/_react.default.createElement("td", null, /*#__PURE__*/_react.default.createElement("img", {
-    src: coin.image,
-    style: {
-      width: 18,
-      height: 18,
-      marginRight: 10
-    }
-  })), /*#__PURE__*/_react.default.createElement("td", null, capitalize(coin.id)), /*#__PURE__*/_react.default.createElement("td", null, coin.symbol.toUpperCase()), /*#__PURE__*/_react.default.createElement("td", null, currencyFormatter(coin.current_price, currency)), /*#__PURE__*/_react.default.createElement("td", {
-    className: coin.price_change_percentage_24h != "NULL" && coin.price_change_percentage_24h > 0 ? "text-success" : "text-danger"
-  }, percentageFormatter(coin.price_change_percentage_24h)), /*#__PURE__*/_react.default.createElement("td", null, currencyFormatter(coin.market_cap, currency)), /*#__PURE__*/_react.default.createElement("td", {
-    className: coin.market_cap_change_percentage_24h != "NULL" && coin.market_cap_change_percentage_24h > 0 ? "text-success" : "text-danger"
-  }, percentageFormatter(coin.market_cap_change_percentage_24h))))))));
+    className: "form-control",
+    value: currency,
+    onChange: e => currencyUpdate(e.target.value)
+  }, /*#__PURE__*/_react.default.createElement("optgroup", {
+    label: "Fiat Currencies"
+  }, /*#__PURE__*/_react.default.createElement("option", null, "USD"), /*#__PURE__*/_react.default.createElement("option", null, "EUR"), /*#__PURE__*/_react.default.createElement("option", null, "MXN"), /*#__PURE__*/_react.default.createElement("option", null, "CAD"), /*#__PURE__*/_react.default.createElement("option", null, "GBP"), /*#__PURE__*/_react.default.createElement("option", null, "JPY"), /*#__PURE__*/_react.default.createElement("option", null, "RUB"), /*#__PURE__*/_react.default.createElement("option", null, "IDR"), /*#__PURE__*/_react.default.createElement("option", null, "KRW"), /*#__PURE__*/_react.default.createElement("option", null, "CNY"), /*#__PURE__*/_react.default.createElement("option", null, "TWD")), /*#__PURE__*/_react.default.createElement("optgroup", {
+    label: "Cryptocurrencies"
+  }, /*#__PURE__*/_react.default.createElement("option", null, "BTC"), /*#__PURE__*/_react.default.createElement("option", null, "BCH"), /*#__PURE__*/_react.default.createElement("option", null, "ETH"), /*#__PURE__*/_react.default.createElement("option", null, "XRP"), /*#__PURE__*/_react.default.createElement("option", null, "DOT"), /*#__PURE__*/_react.default.createElement("option", null, "BNB"), /*#__PURE__*/_react.default.createElement("option", null, "XLM"), /*#__PURE__*/_react.default.createElement("option", null, "YFI"), /*#__PURE__*/_react.default.createElement("option", null, "LTC"), /*#__PURE__*/_react.default.createElement("option", null, "EOS")))))), /*#__PURE__*/_react.default.createElement(_Cointable.default, {
+    coindata: coindata,
+    currency: currency
+  })));
 }
 
 var _default = App;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","./App.css":"App.css"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./App.css":"App.css","./Cointable.js":"Cointable.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -29725,7 +29781,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51738" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65279" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

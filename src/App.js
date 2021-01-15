@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import './App.css';
+import CoinTable from './Cointable.js';
 
-var defaultCurrency = 'usd';
+var defaultCurrency = 'USD';
 
 var renderedData = [];
 
@@ -31,46 +32,8 @@ function App() {
     fetchData(currency);
   }, []);
 
-  // Function to capitalize a string
-  const capitalize = (s) => {
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
-  }
-
-  // Function to format integers into a certain currency
-  const currencyFormatter = (number, currency) =>
-    new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 2
-  }).format(number);
-
-  // Function to format numbers into 2 decimal point fixed percentages
-  const percentageFormatter = (number) => {
-    if(number != null){
-      var percentage = number.toFixed(2) + "%";
-      return percentage;
-   } 
-   else{
-     return "N/A";
-   }
-  }
-
-/*   // Returns table with IDs containing searched value
-  const searchTable = (value, array) => {
-    var filteredData = [];
-    for(var i=0; i<array.length; i++){
-      value = value.toLowerCase();
-      var name = array[i].id.toLowerCase();
-
-      if(name.includes(value)){
-        filteredData.push(array[i]);
-      }
-    }
-    return filteredData;
-  } */
-
-  const updateData = async (searchval) => {
+  // Updates table tada upon new search value input
+  const searchUpdate = async (searchval) => {
     const filteredData = coindataDefault.filter(coin => {
      return coin.id.toLowerCase().includes(searchval.toLowerCase())
     })
@@ -78,6 +41,11 @@ function App() {
     setCoindata(filteredData);
     console.log(searchval)
  }
+
+ const currencyUpdate = async (currency) => {
+  setCurrency(currency);
+  fetchData(currency);
+}
 
   return (
   <div className="App">
@@ -87,65 +55,43 @@ function App() {
       </h1>
     </header>
     <div className="container">
-    {/* <InputBar input={searchval} onChange={updateData}/> */}
     <form>
         <div className="form-row">
           <div className="form-group col-md-6">
-            <input key="random1" id="search-input" className="form-control" type="text" placeholder="Search by name..." value={searchval} onChange={(e) => updateData(e.target.value)}/>
+            <input key="random1" id="search-input" className="form-control" type="text" placeholder="Search by name..." value={searchval} onChange={(e) => searchUpdate(e.target.value)}/>
           </div>
           <div className="form-group col-md-4">
-            <select id="currency-input" className="form-control">
-              <option defaultValue>USD</option>
-              <option>EUR</option>
-              <option>YEN</option>
-              <option>JPN</option>
+            <select id="currency-input" className="form-control" value={currency} onChange={(e) => currencyUpdate(e.target.value)}>
+              <optgroup label="Fiat Currencies">
+                <option>USD</option>
+                <option>EUR</option>
+                <option>MXN</option>
+                <option>CAD</option>
+                <option>GBP</option>
+                <option>JPY</option>
+                <option>RUB</option>
+                <option>IDR</option>
+                <option>KRW</option>
+                <option>CNY</option>
+                <option>TWD</option>
+              </optgroup>
+              <optgroup label="Cryptocurrencies">
+                <option>BTC</option>
+                <option>BCH</option>
+                <option>ETH</option>
+                <option>XRP</option>
+                <option>DOT</option>
+                <option>BNB</option>               
+                <option>XLM</option>
+                <option>YFI</option>
+                <option>LTC</option>
+                <option>EOS</option>
+              </optgroup>
             </select>
           </div>    
         </div>
       </form> 
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Coin</th>
-            <th>Symbol</th>
-            <th>Price</th>
-            <th>Price 24h</th>
-            <th>MKT Cap</th>
-            <th>MKT Cap 24h</th>
-          </tr>
-        </thead>
-        <tbody>
-        {coindata.map(coin => (
-            <tr key={coin.id}>
-              <td>
-                <img 
-                  src={coin.image} 
-                  style={{width: 18, height: 18, marginRight: 10}} 
-                />
-              </td>
-              <td>
-                {capitalize(coin.id)}
-              </td>
-              <td>
-                {coin.symbol.toUpperCase()}
-              </td>
-              <td>
-                {currencyFormatter(coin.current_price, currency)}
-              </td>
-              <td className={(coin.price_change_percentage_24h != "NULL" && coin.price_change_percentage_24h > 0) ? "text-success" : "text-danger"}> 
-                {percentageFormatter(coin.price_change_percentage_24h)}
-              </td>
-              <td>
-                {currencyFormatter(coin.market_cap, currency)}
-              </td>
-              <td className={(coin.market_cap_change_percentage_24h != "NULL" && coin.market_cap_change_percentage_24h > 0) ? "text-success" : "text-danger"}> 
-                {percentageFormatter(coin.market_cap_change_percentage_24h)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> 
+      <CoinTable coindata={coindata} currency={currency}/>
     </div>
   </div>
   );
