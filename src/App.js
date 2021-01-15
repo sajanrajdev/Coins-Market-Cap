@@ -4,19 +4,18 @@ import CoinTable from './Cointable.js';
 
 var defaultCurrency = 'USD';
 
-var renderedData = [];
-
 function App() {
   const [coindata, setCoindata] = useState([]);
   const [coindataDefault, setCoindataDefault] = useState([]);
   const [currency, setCurrency] = useState(defaultCurrency);
   const [searchval, setSearchval] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   
 
   // Function to fetch coin data based on a currency input
-  const fetchData = (currency) => {
+  const fetchData = (currency, page) => {
     var url = new URL ("https://api.coingecko.com/api/v3/coins/markets"),
-    params = {vs_currency: currency, price_change_percentage: '1h,24h,7d'}
+    params = {vs_currency: currency, price_change_percentage: '1h,24h,7d', page: page}
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
       fetch(url)
       .then((response) => response.json())
@@ -24,12 +23,11 @@ function App() {
         setCoindata(data);
         setCoindataDefault(data);       
     });
-    renderedData = coindata;
   }
 
   // On Mount 
   useEffect(()=>{
-    fetchData(currency);
+    fetchData(currency, currentPage);
   }, []);
 
   // Updates table tada upon new search value input
@@ -40,12 +38,27 @@ function App() {
     setSearchval(searchval);
     setCoindata(filteredData);
     console.log(searchval)
- }
+  }
 
- const currencyUpdate = async (currency) => {
-  setCurrency(currency);
-  fetchData(currency);
-}
+  // Fetches new data based on currency input
+  const currencyUpdate = async (currency) => {
+    setCurrency(currency);
+    setCurrentPage(1);
+    fetchData(currency, currentPage);
+  }
+
+  // 
+  const pageUpdate = async (direction) => {
+    console.log(direction, currentPage)
+    if(direction=='next'){
+      setCurrentPage(currentPage+1);
+      fetchData(currency, currentPage+1);
+    }
+    else{
+      setCurrentPage(currentPage-1);
+      fetchData(currency, currentPage-1);
+    }
+  }
 
   return (
   <div className="App">
@@ -88,9 +101,14 @@ function App() {
                 <option>EOS</option>
               </optgroup>
             </select>
-          </div>    
+          </div>
+            <div className="btn-group col-md-1" role="group">
+              <button type="button" className="btn btn-outline-secondary" disabled={currentPage==1} value="next" onClick={(e) => pageUpdate("previous")}><b>{"<"}</b></button>
+              <button type="button" className="btn btn-outline-secondary" disabled={currentPage==61} onClick={(e) => pageUpdate("next")}><b>{">"}</b></button>
+            </div> 
         </div>
       </form> 
+      
       <CoinTable coindata={coindata} currency={currency}/>
     </div>
   </div>

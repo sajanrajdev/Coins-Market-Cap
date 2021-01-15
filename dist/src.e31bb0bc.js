@@ -29608,17 +29608,16 @@ const CoinTable = ({
 }) => {
   const [filterState, setFiterState] = _react.default.useState();
 
-  console.log(coindata);
   return /*#__PURE__*/_react.default.createElement("table", {
     className: "table table-hover"
   }, /*#__PURE__*/_react.default.createElement("thead", null, /*#__PURE__*/_react.default.createElement("tr", {
     className: "big-info"
-  }, /*#__PURE__*/_react.default.createElement("th", {
+  }, /*#__PURE__*/_react.default.createElement("th", null, "#"), /*#__PURE__*/_react.default.createElement("th", {
     onClick: e => console.log(order),
     order: "desc"
-  }, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "1h"), /*#__PURE__*/_react.default.createElement("th", null, "24h"), /*#__PURE__*/_react.default.createElement("th", null, "7d"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap 24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
+  }, "Coin"), /*#__PURE__*/_react.default.createElement("th", null, "Symbol"), /*#__PURE__*/_react.default.createElement("th", null, "Price"), /*#__PURE__*/_react.default.createElement("th", null, "1h"), /*#__PURE__*/_react.default.createElement("th", null, "24h"), /*#__PURE__*/_react.default.createElement("th", null, "7d"), /*#__PURE__*/_react.default.createElement("th", null, "MKT Cap"), /*#__PURE__*/_react.default.createElement("th", null, "24h"))), /*#__PURE__*/_react.default.createElement("tbody", null, coindata.map(coin => /*#__PURE__*/_react.default.createElement("tr", {
     key: coin.id
-  }, /*#__PURE__*/_react.default.createElement("td", {
+  }, /*#__PURE__*/_react.default.createElement("td", null, coin.market_cap_rank), /*#__PURE__*/_react.default.createElement("td", {
     align: "left"
   }, /*#__PURE__*/_react.default.createElement("img", {
     src: coin.image,
@@ -29661,31 +29660,31 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var defaultCurrency = 'USD';
-var renderedData = [];
 
 function App() {
   const [coindata, setCoindata] = (0, _react.useState)([]);
   const [coindataDefault, setCoindataDefault] = (0, _react.useState)([]);
   const [currency, setCurrency] = (0, _react.useState)(defaultCurrency);
-  const [searchval, setSearchval] = (0, _react.useState)(""); // Function to fetch coin data based on a currency input
+  const [searchval, setSearchval] = (0, _react.useState)("");
+  const [currentPage, setCurrentPage] = (0, _react.useState)(1); // Function to fetch coin data based on a currency input
 
-  const fetchData = currency => {
+  const fetchData = (currency, page) => {
     var url = new URL("https://api.coingecko.com/api/v3/coins/markets"),
         params = {
       vs_currency: currency,
-      price_change_percentage: '1h,24h,7d'
+      price_change_percentage: '1h,24h,7d',
+      page: page
     };
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     fetch(url).then(response => response.json()).then(data => {
       setCoindata(data);
       setCoindataDefault(data);
     });
-    renderedData = coindata;
   }; // On Mount 
 
 
   (0, _react.useEffect)(() => {
-    fetchData(currency);
+    fetchData(currency, currentPage);
   }, []); // Updates table tada upon new search value input
 
   const searchUpdate = async searchval => {
@@ -29695,11 +29694,26 @@ function App() {
     setSearchval(searchval);
     setCoindata(filteredData);
     console.log(searchval);
-  };
+  }; // Fetches new data based on currency input
+
 
   const currencyUpdate = async currency => {
     setCurrency(currency);
-    fetchData(currency);
+    setCurrentPage(1);
+    fetchData(currency, currentPage);
+  }; // 
+
+
+  const pageUpdate = async direction => {
+    console.log(direction, currentPage);
+
+    if (direction == 'next') {
+      setCurrentPage(currentPage + 1);
+      fetchData(currency, currentPage + 1);
+    } else {
+      setCurrentPage(currentPage - 1);
+      fetchData(currency, currentPage - 1);
+    }
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -29729,7 +29743,21 @@ function App() {
     label: "Fiat Currencies"
   }, /*#__PURE__*/_react.default.createElement("option", null, "USD"), /*#__PURE__*/_react.default.createElement("option", null, "EUR"), /*#__PURE__*/_react.default.createElement("option", null, "MXN"), /*#__PURE__*/_react.default.createElement("option", null, "CAD"), /*#__PURE__*/_react.default.createElement("option", null, "GBP"), /*#__PURE__*/_react.default.createElement("option", null, "JPY"), /*#__PURE__*/_react.default.createElement("option", null, "RUB"), /*#__PURE__*/_react.default.createElement("option", null, "IDR"), /*#__PURE__*/_react.default.createElement("option", null, "KRW"), /*#__PURE__*/_react.default.createElement("option", null, "CNY"), /*#__PURE__*/_react.default.createElement("option", null, "TWD")), /*#__PURE__*/_react.default.createElement("optgroup", {
     label: "Cryptocurrencies"
-  }, /*#__PURE__*/_react.default.createElement("option", null, "BTC"), /*#__PURE__*/_react.default.createElement("option", null, "BCH"), /*#__PURE__*/_react.default.createElement("option", null, "ETH"), /*#__PURE__*/_react.default.createElement("option", null, "XRP"), /*#__PURE__*/_react.default.createElement("option", null, "DOT"), /*#__PURE__*/_react.default.createElement("option", null, "BNB"), /*#__PURE__*/_react.default.createElement("option", null, "XLM"), /*#__PURE__*/_react.default.createElement("option", null, "YFI"), /*#__PURE__*/_react.default.createElement("option", null, "LTC"), /*#__PURE__*/_react.default.createElement("option", null, "EOS")))))), /*#__PURE__*/_react.default.createElement(_Cointable.default, {
+  }, /*#__PURE__*/_react.default.createElement("option", null, "BTC"), /*#__PURE__*/_react.default.createElement("option", null, "BCH"), /*#__PURE__*/_react.default.createElement("option", null, "ETH"), /*#__PURE__*/_react.default.createElement("option", null, "XRP"), /*#__PURE__*/_react.default.createElement("option", null, "DOT"), /*#__PURE__*/_react.default.createElement("option", null, "BNB"), /*#__PURE__*/_react.default.createElement("option", null, "XLM"), /*#__PURE__*/_react.default.createElement("option", null, "YFI"), /*#__PURE__*/_react.default.createElement("option", null, "LTC"), /*#__PURE__*/_react.default.createElement("option", null, "EOS")))), /*#__PURE__*/_react.default.createElement("div", {
+    className: "btn-group col-md-1",
+    role: "group"
+  }, /*#__PURE__*/_react.default.createElement("button", {
+    type: "button",
+    className: "btn btn-outline-secondary",
+    disabled: currentPage == 1,
+    value: "next",
+    onClick: e => pageUpdate("previous")
+  }, /*#__PURE__*/_react.default.createElement("b", null, "<")), /*#__PURE__*/_react.default.createElement("button", {
+    type: "button",
+    className: "btn btn-outline-secondary",
+    disabled: currentPage == 61,
+    onClick: e => pageUpdate("next")
+  }, /*#__PURE__*/_react.default.createElement("b", null, ">"))))), /*#__PURE__*/_react.default.createElement(_Cointable.default, {
     coindata: coindata,
     currency: currency
   })));

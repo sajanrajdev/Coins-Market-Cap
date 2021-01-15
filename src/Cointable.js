@@ -3,12 +3,11 @@ import {percentageFormatter, currencyFormatter, capitalize} from './utils.js';
 
 const CoinTable = ({coindata, currency}) => {
   const [filterState, setFiterState] = React.useState();
-
-  console.log(coindata)
     return (
     <table className="table table-hover">
             <thead>
             <tr className="big-info">
+                <th>#</th>
                 <th onClick={(e) => console.log(order)} order='desc'>Coin</th>
                 <th>Symbol</th>
                 <th>Price</th>
@@ -16,12 +15,13 @@ const CoinTable = ({coindata, currency}) => {
                 <th>24h</th>
                 <th>7d</th>
                 <th>MKT Cap</th>
-                <th>MKT Cap 24h</th>
+                <th>24h</th>
             </tr>
             </thead>
             <tbody>
             {coindata.map(coin => (
                 <tr key={coin.id}>
+                <td>{coin.market_cap_rank}</td>
                 <td align="left">
                 <img 
                     src={coin.image} 
