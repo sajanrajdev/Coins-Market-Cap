@@ -29666,25 +29666,36 @@ function App() {
   const [coindataDefault, setCoindataDefault] = (0, _react.useState)([]);
   const [currency, setCurrency] = (0, _react.useState)(defaultCurrency);
   const [searchval, setSearchval] = (0, _react.useState)("");
-  const [currentPage, setCurrentPage] = (0, _react.useState)(1); // Function to fetch coin data based on a currency input
+  const [currentPage, setCurrentPage] = (0, _react.useState)(1);
+  const [paglimit, setPaglimit] = (0, _react.useState)(1); // Function to fetch coin data based on a currency input
 
   const fetchData = (currency, page) => {
     var url = new URL("https://api.coingecko.com/api/v3/coins/markets"),
         params = {
       vs_currency: currency,
       price_change_percentage: '1h,24h,7d',
-      page: page
+      page: page,
+      per_page: 100
     };
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     fetch(url).then(response => response.json()).then(data => {
       setCoindata(data);
       setCoindataDefault(data);
     });
+  }; // Function to fetch coin data and set pagination limit from list size
+
+
+  const fetchCoinListLength = () => {
+    var url = new URL("https://api.coingecko.com/api/v3/coins/list");
+    fetch(url).then(response => response.json()).then(data => {
+      setPaglimit(Math.round(data.length / 100));
+    });
   }; // On Mount 
 
 
   (0, _react.useEffect)(() => {
     fetchData(currency, currentPage);
+    fetchCoinListLength();
   }, []); // Updates table tada upon new search value input
 
   const searchUpdate = async searchval => {
@@ -29693,7 +29704,6 @@ function App() {
     });
     setSearchval(searchval);
     setCoindata(filteredData);
-    console.log(searchval);
   }; // Fetches new data based on currency input
 
 
@@ -29701,12 +29711,10 @@ function App() {
     setCurrency(currency);
     setCurrentPage(1);
     fetchData(currency, currentPage);
-  }; // 
+  }; // Updates currentPage and its respective data
 
 
   const pageUpdate = async direction => {
-    console.log(direction, currentPage);
-
     if (direction == 'next') {
       setCurrentPage(currentPage + 1);
       fetchData(currency, currentPage + 1);
@@ -29718,7 +29726,7 @@ function App() {
 
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "App"
-  }, /*#__PURE__*/_react.default.createElement("header", null, /*#__PURE__*/_react.default.createElement("h1", null, "Top 100 Coins by Market Cap")), /*#__PURE__*/_react.default.createElement("div", {
+  }, /*#__PURE__*/_react.default.createElement("header", null, /*#__PURE__*/_react.default.createElement("h1", null, "Coins Market Cap")), /*#__PURE__*/_react.default.createElement("div", {
     className: "container"
   }, /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
     className: "form-row"
@@ -29750,17 +29758,33 @@ function App() {
     type: "button",
     className: "btn btn-outline-secondary",
     disabled: currentPage == 1,
-    value: "next",
+    value: "previous",
     onClick: e => pageUpdate("previous")
   }, /*#__PURE__*/_react.default.createElement("b", null, "<")), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     className: "btn btn-outline-secondary",
     disabled: currentPage == 61,
+    value: "next",
     onClick: e => pageUpdate("next")
   }, /*#__PURE__*/_react.default.createElement("b", null, ">"))))), /*#__PURE__*/_react.default.createElement(_Cointable.default, {
     coindata: coindata,
     currency: currency
-  })));
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "btn-group col-md-1",
+    role: "group"
+  }, /*#__PURE__*/_react.default.createElement("button", {
+    type: "button",
+    className: "btn btn-outline-secondary",
+    disabled: currentPage == 1,
+    value: "previous",
+    onClick: e => pageUpdate("previous")
+  }, /*#__PURE__*/_react.default.createElement("b", null, "<")), /*#__PURE__*/_react.default.createElement("button", {
+    type: "button",
+    className: "btn btn-outline-secondary",
+    disabled: currentPage == paglimit,
+    value: "next",
+    onClick: e => pageUpdate("next")
+  }, /*#__PURE__*/_react.default.createElement("b", null, ">")))));
 }
 
 var _default = App;
